@@ -21,6 +21,8 @@
 /home/julian/soft_dev/ubidots/ubichallenge-android/platforms/android/assets/www/js \
 /home/julian/soft_dev/ubidots/ubichallenge-android/platforms/android/assets/www/cordova_plugins.js \
 /home/julian/soft_dev/ubidots/ubichallenge-android/platforms/android/assets/www/css/index.css \
-/home/julian/soft_dev/ubidots/ubichallenge-android/platforms/android/assets/www/img/logo.png \
+/home/julian/soft_dev/ubidots/ubichallenge-android/platforms/android/assets/www/img/icon_yellow.png \
+/home/julian/soft_dev/ubidots/ubichallenge-android/platforms/android/assets/www/img/icon_green.png \
+/home/julian/soft_dev/ubidots/ubichallenge-android/platforms/android/assets/www/img/icon_red.png \
 /home/julian/soft_dev/ubidots/ubichallenge-android/platforms/android/assets/www/js/index.js \
 /home/julian/soft_dev/ubidots/ubichallenge-android/platforms/android/bin/AndroidManifest.xml \

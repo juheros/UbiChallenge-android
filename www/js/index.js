@@ -1,49 +1,99 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
-var app = {
-    // Application Constructor
-    initialize: function() {
-        this.bindEvents();
-    },
-    // Bind Event Listeners
-    //
-    // Bind any events that are required on startup. Common events are:
-    // 'load', 'deviceready', 'offline', and 'online'.
-    bindEvents: function() {
-        document.addEventListener('deviceready', this.onDeviceReady, false);
-    },
-    // deviceready Event Handler
-    //
-    // The scope of 'this' is the event. In order to call the 'receivedEvent'
-    // function, we must explicity call 'app.receivedEvent(...);'
-    onDeviceReady: function() {
-        app.receivedEvent('deviceready');
-    },
-    // Update DOM on a Received Event
-    receivedEvent: function(id) {
-        var parentElement = document.getElementById(id);
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
+    google.maps.visualRefresh = true;
+    
+    var map;
+    var markers = [];
+    var icon_green = 'img/icon_green.png';
+    var icon_red = 'img/icon_red.png';
+    var icon_yellow =  'img/icon_yellow.png';
 
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
+    function initialize() {
+      var mapOptions = {
+        zoom:14
+      };
 
-        console.log('Received Event: ' + id);
+      map = new google.maps.Map(document.getElementById('map-canvas'),
+          mapOptions);
+       var latlng = new google.maps.LatLng(4.814789,-75.707603);
+      map.setCenter(latlng);
     }
-};
+
+
+    function LimpiarMarcadores() {
+      for (var i = 0; i < markers.length; i++) {
+          markers[i].setMap(null);
+      }
+      markers= [];
+    }
+
+    function getIcono(pasajeros){
+      if (pasajeros < 10 ){
+        return icon_green;
+      }
+      if (pasajeros >= 10 && pasajeros <= 30 ){
+        return icon_yellow;
+      }
+      if (pasajeros > 30 ){
+        return icon_red;
+      }
+    }
+
+    function dibujarVehiculo(variable_id){
+
+    
+      LimpiarMarcadores();
+
+            
+      $.ajax({  type: "GET",
+                dataType: "json",
+                url : "http://things.ubidots.com/api/v1.6/variables/"+variable_id+"/values?page_size=1&page=1",
+                headers: {
+                    'X-Auth-Token' : 'vUOiTKHogWDlj7fjUgZLfG1KSA0WVuK941zLEHQg7LNkLeoQlwPwfJ5hgRNI'
+                },
+                 success: function(data){
+
+                    var latlng = new google.maps.LatLng( data.results[0].context["latitud"], data.results[0].context["longitud"]);
+                    var marker = new google.maps.Marker({
+                    position: latlng,
+                    map:map,
+                    title:  "Nivel de gasolina: "+data.results[0].value + "%",
+                    cursor: 'default',
+                    icon: getIcono(data.results[0].context["pasajeros"]),
+                    draggable: false
+                    });
+                    var popup = new google.maps.InfoWindow({
+                      content: data.results[0].value +'%'
+                    });
+             
+                    popup.open(map, marker);
+                    //limits.extend(latlng);
+                    
+                    markers.push(marker);
+                    //$('#gasolina').append('El nivel actual de gasolina es: ' + data.results[0].value + '%<br />');
+                    
+                    
+                    
+                 }
+             });
+
+    }
+
+    function main(){
+      $.ajax({  type: "GET",
+                dataType: "json",
+                url : "http://things.ubidots.com/api/v1.6/datasources/52d95910f91b2813517c8d00/variables",
+                headers: {
+                    'X-Auth-Token' : 'vUOiTKHogWDlj7fjUgZLfG1KSA0WVuK941zLEHQg7LNkLeoQlwPwfJ5hgRNI'
+                },
+                 success: function(data){
+                    for (var i = 0; i < data.results.length; i++){
+                      dibujarVehiculo(data.results[i].id);
+                    }
+                    
+                    
+                 }
+                 
+              });
+      setTimeout('main()', 5000);
+    }
+    initialize();
+    main();
