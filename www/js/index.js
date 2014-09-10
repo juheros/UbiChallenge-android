@@ -47,7 +47,7 @@
                 dataType: "json",
                 url : "http://things.ubidots.com/api/v1.6/variables/"+variable_id+"/values?page_size=1&page=1",
                 headers: {
-                    'X-Auth-Token' : 'vUOiTKHogWDlj7fjUgZLfG1KSA0WVuK941zLEHQg7LNkLeoQlwPwfJ5hgRNI'
+                    'X-Auth-Token' : 'K97e5lkWV6dxpAvVcJnlyM2qCMPXKfbYRyWS0ndbh9gvLpu9e63w744LVDGH'
                 },
                  success: function(data){
 
@@ -82,7 +82,7 @@
                 dataType: "json",
                 url : "http://things.ubidots.com/api/v1.6/datasources/52d95910f91b2813517c8d00/variables",
                 headers: {
-                    'X-Auth-Token' : 'vUOiTKHogWDlj7fjUgZLfG1KSA0WVuK941zLEHQg7LNkLeoQlwPwfJ5hgRNI'
+                    'X-Auth-Token' : 'K97e5lkWV6dxpAvVcJnlyM2qCMPXKfbYRyWS0ndbh9gvLpu9e63w744LVDGH'
                 },
                  success: function(data){
                     for (var i = 0; i < data.results.length; i++){
